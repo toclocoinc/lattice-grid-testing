@@ -1,0 +1,75 @@
+{
+  "name": "@toclocoinc/lattice-grid-testing",
+  "version": "0.1.0",
+  "description": "End-to-end test helpers for apps built on Lattice Grid: locators and readers over the grid's public DOM contract (data attributes and ARIA roles), with thin bindings for Playwright and Cypress.",
+  "keywords": [
+    "lattice-grid",
+    "data-grid",
+    "testing",
+    "e2e",
+    "end-to-end",
+    "playwright",
+    "cypress",
+    "locators",
+    "test-helpers",
+    "accessibility"
+  ],
+  "license": "SEE LICENSE IN LICENSE",
+  "author": "TOCLOCO Inc",
+  "homepage": "https://www.latticegrid.dev",
+  "type": "module",
+  "sideEffects": false,
+  "files": [
+    "dist/",
+    "README.md",
+    "LICENSE"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/core/index.d.ts",
+      "default": "./dist/core/index.js"
+    },
+    "./core": {
+      "types": "./dist/core/index.d.ts",
+      "default": "./dist/core/index.js"
+    },
+    "./playwright": {
+      "types": "./dist/playwright/index.d.ts",
+      "default": "./dist/playwright/index.js"
+    },
+    "./cypress": {
+      "types": "./dist/cypress/index.d.ts",
+      "default": "./dist/cypress/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "types": "./dist/core/index.d.ts",
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "build": "node tools/build.js",
+    "test": "node tools/build.js && node --test test/unit/ && playwright test -c test/playwright/playwright.config.js && cypress run --project test/cypress --browser chrome",
+    "test:unit": "node tools/build.js && node --test test/unit/",
+    "test:playwright": "node tools/build.js && playwright test -c test/playwright/playwright.config.js",
+    "test:cypress": "node tools/build.js && cypress run --project test/cypress --browser chrome",
+    "prepack": "node tools/build.js"
+  },
+  "peerDependencies": {
+    "@playwright/test": ">=1.40",
+    "cypress": ">=12"
+  },
+  "peerDependenciesMeta": {
+    "@playwright/test": {
+      "optional": true
+    },
+    "cypress": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "@playwright/test": "1.64.1",
+    "@toclocoinc/lattice-grid": "1.112.0",
+    "cypress": "16.2.0"
+  }
+}

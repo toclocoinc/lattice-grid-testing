@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Grid fixture</title>
+<link rel="stylesheet" href="/node_modules/@toclocoinc/lattice-grid/lattice-grid.min.css">
+<style>
+  body { margin: 0; padding: 16px; font: 14px system-ui, sans-serif; }
+  #grid { height: 360px; width: 720px; }
+</style>
+</head>
+<body>
+<div id="grid"></div>
+<script type="importmap">
+{ "imports": {
+  "@toclocoinc/lattice-grid": "/node_modules/@toclocoinc/lattice-grid/lattice-grid.esm.min.js",
+  "@toclocoinc/lattice-grid/": "/node_modules/@toclocoinc/lattice-grid/"
+} }
+</script>
+<script type="module">
+  // A plain grid as an app would set it up: no option exists for the helpers.
+  import { createGrid } from '@toclocoinc/lattice-grid';
+
+  const cities = ['Lisbon', 'Osaka', 'Quito', 'Tallinn', 'Accra', 'Hobart'];
+  const rows = Array.from({ length: 200 }, (_, i) => ({
+    id: i + 1,
+    name: `Item ${String(i + 1).padStart(3, '0')}`,
+    city: cities[i % cities.length],
+    qty: (i * 37) % 101,
+  }));
+  window.grid = createGrid(document.getElementById('grid'), {
+    columns: [
+      { field: 'name', title: 'Name', edit: true },
+      { field: 'city', title: 'City' },
+      { field: 'qty', title: 'Quantity', type: 'number' },
+    ],
+    rows,
+    rowKey: 'id',
+    edit: true,
+  });
+</script>
+</body>
+</html>

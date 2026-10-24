@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Viewers fixture</title>
+<link rel="stylesheet" href="/node_modules/@toclocoinc/lattice-grid/lattice-grid.min.css">
+<style>
+  body { margin: 0; padding: 16px; font: 14px system-ui, sans-serif; }
+  section { margin-bottom: 24px; }
+  #list, #dataview { height: 220px; width: 600px; }
+  #kanban { height: 320px; width: 900px; }
+  #gantt { width: 900px; }
+  #calendar { height: 520px; width: 900px; }
+</style>
+</head>
+<body>
+<section><h2>List</h2><div id="list"></div></section>
+<section><h2>Data view</h2><div id="dataview"></div></section>
+<section><h2>Kanban</h2><div id="kanban"></div></section>
+<section><h2>Gantt</h2><div id="gantt"></div></section>
+<section><h2>Calendar</h2><div id="calendar"></div></section>
+<script type="importmap">
+{ "imports": {
+  "@toclocoinc/lattice-grid": "/node_modules/@toclocoinc/lattice-grid/lattice-grid.esm.min.js",
+  "@toclocoinc/lattice-grid/": "/node_modules/@toclocoinc/lattice-grid/"
+} }
+</script>
+<script type="module">
+  // Each viewer as an app would set it up, with no option for the helpers.
+  const base = '/node_modules/@toclocoinc/lattice-grid';
+  const { createGrid } = await import(`${base}/lattice-grid.esm.min.js`);
+  const { createList } = await import(`${base}/modules/listview.esm.min.js`);
+  const { createDataView } = await import(`${base}/modules/dataview.esm.min.js`);
+  const { createKanban } = await import(`${base}/modules/kanban.esm.min.js`);
+  const { createGantt } = await import(`${base}/modules/gantt.esm.min.js`);
+  const { createCalendar } = await import(`${base}/modules/calendar.esm.min.js`);
+
+  const people = [
+    { id: 'a', name: 'Ada' },
+    { id: 'b', name: 'Bo' },
+    { id: 'c', name: 'Cy' },
+  ];
+  window.list = createList(document.getElementById('list'), {
+    createGrid,
+    data: people,
+    template: (item) => `<strong>${item.name}</strong>`,
+  });
+  window.dataview = createDataView(document.getElementById('dataview'), {
+    data: people,
+    template: (item) => `<strong>${item.name}</strong>`,
+  });
+  window.kanban = createKanban(document.getElementById('kanban'), {
+    rows: [
+      { id: 1, title: 'Write brief', status: 'todo' },
+      { id: 2, title: 'Review copy', status: 'doing' },
+      { id: 3, title: 'Ship', status: 'done' },
+      { id: 4, title: 'Plan next', status: 'todo' },
+    ],
+    rowKey: 'id',
+    columnProperty: 'status',
+    columns: [
+      { id: 'todo', title: 'To do' },
+      { id: 'doing', title: 'Doing' },
+      { id: 'done', title: 'Done' },
+    ],
+  });
+  window.gantt = createGantt({
+    projectStart: '2026-01-05',
+    tasks: [
+      { id: 't1', name: 'Design', start: '2026-01-05', end: '2026-01-09' },
+      { id: 't2', name: 'Build', start: '2026-01-12', end: '2026-01-16' },
+    ],
+  });
+  window.gantt.mount(document.getElementById('gantt'));
+  window.calendar = createCalendar(document.getElementById('calendar'), {
+    rows: [
+      { id: 'e1', title: 'Kick-off', start: '2026-03-04' },
+      { id: 'e2', title: 'Review', start: '2026-03-18' },
+    ],
+    date: '2026-03-10',
+    view: 'month',
+  });
+</script>
+</body>
+</html>
