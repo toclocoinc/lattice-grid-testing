@@ -40,4 +40,10 @@ jobs:
           V=$(node -p "require('./package.json').version")
           T="${{ inputs.tag || github.ref_name }}"
           [ "v$V" = "$T" ] || { echo "package.json says $V, tag is $T"; exit 1; }
+      - name: Skip when this version is already on npm (the first release was published by hand)
+        id: check
+        run: |
+          V=$(node -p "require('./package.json').version"); N=$(node -p "require('./package.json').name")
+          if npm view "$N@$V" version >/dev/null 2>&1; then echo "published=true" >> "$GITHUB_OUTPUT"; echo "$N@$V is already on npm"; else echo "published=false" >> "$GITHUB_OUTPUT"; fi
       - run: npm publish --access public --provenance
+        if: steps.check.outputs.published != 'true'

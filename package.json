@@ -16,7 +16,7 @@
   ],
   "license": "SEE LICENSE IN LICENSE",
   "author": "TOCLOCO Inc",
-  "homepage": "https://www.latticegrid.dev",
+  "homepage": "https://github.com/toclocoinc/lattice-grid-testing#readme",
   "type": "module",
   "sideEffects": false,
   "files": [
@@ -71,5 +71,12 @@
     "@playwright/test": "1.64.1",
     "@toclocoinc/lattice-grid": "1.112.0",
     "cypress": "16.2.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/toclocoinc/lattice-grid-testing.git"
+  },
+  "bugs": {
+    "url": "https://github.com/toclocoinc/lattice-grid-testing/issues"
   }
 }
