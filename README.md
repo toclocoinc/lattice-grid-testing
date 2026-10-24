@@ -106,6 +106,25 @@ was still pending. Every gesture waits for it before returning.
   versions its contract tests ran against; this one, 0.1.0, ran against
   `@toclocoinc/lattice-grid` 1.112.0.
 
+## Known gaps in this release
+
+Two parts of the grid's DOM contract are not there yet, and the helpers say so
+rather than paper over it:
+
+- **No reader for a selected range.** The grid does not yet mark range-selected
+  cells with `aria-selected`, so `selectRange` performs the gesture but nothing
+  in this package can report which cells ended up selected. Assert on what the
+  selection caused (an edit, a copy, a status line) until the grid carries the
+  attribute.
+- **No busy signal while a source loads.** The grid does not yet raise
+  `aria-busy="true"` while rows are on their way, so `waitForIdle` rests on the
+  quiet-frames rule and the mount check. A slow remote source can look idle
+  between the request and the first row; give such a test a `rowCount`
+  expectation rather than trusting idleness alone.
+
+Both are tracked on the grid side; a release of this package that can read
+them will say so here.
+
 ## Licence
 
 Same licence as Lattice Grid; see [LICENSE](LICENSE).
