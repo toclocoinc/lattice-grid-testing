@@ -49,8 +49,8 @@
   },
   "scripts": {
     "build": "node tools/build.js",
-    "test": "node tools/build.js && node --test test/unit/ && playwright test -c test/playwright/playwright.config.js && cypress run --project test/cypress --browser chrome",
-    "test:unit": "node tools/build.js && node --test test/unit/",
+    "test": "node tools/build.js && node --test test/unit/*.test.js && playwright test -c test/playwright/playwright.config.js && cypress run --project test/cypress --browser chrome",
+    "test:unit": "node tools/build.js && node --test test/unit/*.test.js",
     "test:playwright": "node tools/build.js && playwright test -c test/playwright/playwright.config.js",
     "test:cypress": "node tools/build.js && cypress run --project test/cypress --browser chrome",
     "prepack": "node tools/build.js"
