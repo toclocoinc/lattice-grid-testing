@@ -72,3 +72,30 @@ test('waitForIdle settles after a data change, and fails on a grid that never se
   await page.evaluate(() => document.querySelector('#grid [role="grid"]').setAttribute('aria-busy', 'true'));
   await expect(g.waitForIdle({ timeout: 300 })).rejects.toThrow(/aria-busy/);
 });
+
+test('the core surface works on live DOM elements inside the page', async ({ page }) => {
+  await page.addScriptTag({ type: 'module', content: "import * as core from '/dist/core/index.js'; window.core = core;" });
+  await page.waitForFunction(() => window.core);
+  const got = await page.evaluate(async () => {
+    const g = window.core.grid(document.getElementById('grid'));
+    await g.waitForIdle();
+    const row = g.readRow(0);
+    await g.scrollToRow(120);
+    return {
+      count: g.rowCount(),
+      header: g.header('qty').getAttribute('role'),
+      cell: g.readCell('name', 120),
+      row,
+      sort: g.sortState('city'),
+      idle: g.isIdle(),
+    };
+  });
+  expect(got).toEqual({
+    count: 200,
+    header: 'columnheader',
+    cell: 'Item 121',
+    row: { name: 'Item 001', city: 'Lisbon', qty: '0' },
+    sort: 'none',
+    idle: true,
+  });
+});
