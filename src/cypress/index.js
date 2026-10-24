@@ -29,15 +29,36 @@ const topCentre = (el) => {
   let x = r.left + r.width / 2;
   let y = r.top + r.height / 2;
   let win = el.ownerDocument.defaultView;
-  while (win.frameElement) {
-    const f = win.frameElement;
+  for (let f = frameOf(win); f; f = frameOf(win)) {
     const fr = f.getBoundingClientRect();
     const scale = f.offsetWidth ? fr.width / f.offsetWidth : 1;
     x = fr.left + (f.clientLeft + x) * scale;
     y = fr.top + (f.clientTop + y) * scale;
-    win = win.parent;
+    win = f.ownerDocument.defaultView;
   }
   return { x, y };
+};
+
+/**
+ * The iframe a window is shown in. The app's window cannot always see its own
+ * frame element (the runner may sit on another origin), so the runner's
+ * frames are searched from this side, which shares the runner's origin.
+ * @param {Window} win The window.
+ * @returns {HTMLIFrameElement | null} Its frame, or null for the top window.
+ */
+const frameOf = (win) => {
+  if (win === win.top) return null;
+  try {
+    if (win.frameElement) return win.frameElement;
+  } catch {
+    // A cross-origin parent: look from the runner's side instead.
+  }
+  try {
+    for (const f of window.top.document.querySelectorAll('iframe')) if (f.contentWindow === win) return f;
+  } catch {
+    // The top window is out of reach too; no offset can be added.
+  }
+  return null;
 };
 
 /** Mouse state carried between protocol events. */
