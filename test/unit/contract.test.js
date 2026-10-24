@@ -61,7 +61,9 @@ test('the package has no runtime dependencies and only optional peers', () => {
 
 test('npm pack produces a tarball of dist, README, LICENSE and package.json only', () => {
   const out = execFileSync('npm', ['pack', '--dry-run', '--json', '--ignore-scripts'], { cwd: ROOT, encoding: 'utf8' });
-  const [{ files }] = JSON.parse(out);
+  // npm 10 prints an array with one entry; newer npm prints the entry itself.
+  const parsed = JSON.parse(out.slice(out.search(/[\[{]/)));
+  const { files } = Array.isArray(parsed) ? parsed[0] : parsed;
   const paths = files.map((f) => f.path).sort();
   for (const p of paths) assert.match(p, /^(dist\/(core|playwright|cypress)\/index\.(js|d\.ts)|README\.md|LICENSE|package\.json)$/);
   for (const need of ['dist/core/index.js', 'dist/playwright/index.js', 'dist/cypress/index.js', 'dist/core/index.d.ts', 'README.md', 'LICENSE']) {
